@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Claims;
+using UnityEditor.Experimental.Rendering;
 using UnityEngine;
 
 public class GameManegerScript : MonoBehaviour
 {
     public GameObject playerPrefab;
     public GameObject boxPrefab;
+    public GameObject clearText;
+    public GameObject clearObj;
 
     int[,] map;
     GameObject[,] field;
@@ -18,7 +21,6 @@ public class GameManegerScript : MonoBehaviour
 // Start is called before the first frame update
 void Start()
     {
-    string debugTXT = "";
 
         map = new int[,] {
         { 0,0,0,0,0 },
@@ -59,10 +61,16 @@ void Start()
                         Quaternion.identity
                         );
                 }
+                if (map[y, x] == 3)
+                {
+                    field[y, x] = Instantiate(
+                        clearObj,
+                        new Vector3(x, map.GetLength(0) - y, 0.1f),
+                        Quaternion.identity
+                        );
+                }
             }
-            debugTXT += "\n";
         }
-        Debug.Log(debugTXT);
         //PrintArray();
     }
 
@@ -75,6 +83,11 @@ void Start()
             Vector2Int PlayerIndex = GetPlayerIndex();
 
             MoveNumber(PlayerIndex, PlayerIndex + new Vector2Int(1,0));
+
+            if (IsCleard())
+            {
+                clearText.SetActive(true);
+            }
         }
 
 
@@ -83,6 +96,11 @@ void Start()
             Vector2Int PlayerIndex = GetPlayerIndex();
 
             MoveNumber(PlayerIndex, PlayerIndex + new Vector2Int(-1, 0));
+
+            if (IsCleard())
+            {
+                clearText.SetActive(true);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -90,6 +108,11 @@ void Start()
             Vector2Int PlayerIndex = GetPlayerIndex();
 
             MoveNumber(PlayerIndex, PlayerIndex + new Vector2Int(0, -1 ));
+
+            if (IsCleard())
+            {
+                clearText.SetActive(true);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -97,9 +120,19 @@ void Start()
             Vector2Int PlayerIndex = GetPlayerIndex();
 
             MoveNumber(PlayerIndex, PlayerIndex + new Vector2Int(0, 1));
-        }
 
+            if (IsCleard())
+            {
+                clearText.SetActive(true);
+            }
+        }
+        //ÉNÉäÉA
+        if (IsCleard())
+        {
+            Debug.Log("Clear");
+        }
     }
+    
 Vector2Int GetPlayerIndex()
     {for(int y = 0;y<field.GetLength(0);y++)
         {
@@ -147,8 +180,13 @@ Vector2Int GetPlayerIndex()
         }
         for(int i = 0; i < goals.Count; i++)
         {
-
+            GameObject f = field[goals[i].y, goals[i].x];
+            if(f == null || f.tag != "Box")
+            {
+                return false;
+            }
         }
+        return true;
     }
 }
 
