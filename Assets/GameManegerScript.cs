@@ -1,9 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Claims;
-using UnityEditor.Experimental.Rendering;
 using UnityEngine;
 
 public class GameManegerScript : MonoBehaviour
@@ -21,7 +17,7 @@ public class GameManegerScript : MonoBehaviour
 // Start is called before the first frame update
 void Start()
     {
-
+        Screen.SetResolution(1280, 720, false);
         map = new int[,] {
         { 0,0,0,0,0 },
         { 0,3,1,3,0 },
@@ -83,7 +79,7 @@ void Start()
             Vector2Int PlayerIndex = GetPlayerIndex();
 
             MoveNumber(PlayerIndex, PlayerIndex + new Vector2Int(1,0));
-
+                
             if (IsCleard())
             {
                 clearText.SetActive(true);
@@ -157,7 +153,9 @@ Vector2Int GetPlayerIndex()
             if (!success) { return false; }
         }
         field[moveTo.y, moveTo.x] = field[moveFrom.y, moveFrom.x];
-        field[moveFrom.y, moveFrom.x].transform.position = new Vector3(moveTo.x, field.GetLength(0) - moveTo.y, 0);
+        //field[moveFrom.y, moveFrom.x].transform.position = new Vector3(moveTo.x - map.GetLength(1) / 2, -moveTo.y + map.GetLength(0) / 2, 0);
+        Vector3 moveToPosition = new Vector3(moveTo.x, map.GetLength(0) - moveTo.y, 0);
+        field[moveFrom.y, moveFrom.x].GetComponent<Move>().MoveTo(moveToPosition);
         field[moveFrom.y, moveFrom.x] = null;
         
         return true;
