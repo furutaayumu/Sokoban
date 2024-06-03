@@ -30,7 +30,7 @@ public class Move : MonoBehaviour
     private void Update()
     {
         if(origin == destination) { return;}
-        timeErapsed +   = Time.deltaTime;
+        timeErapsed += Time.deltaTime;
         float timeRate = timeErapsed / timeTaken;
         if (timeRate > 1) { timeRate = 1; }
         float easing = timeRate;
